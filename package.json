@@ -1,6 +1,6 @@
 {
   "name": "kenote-react-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "cli for react",
   "main": "index.js",
   "preferGlobal": true,
@@ -14,7 +14,7 @@
     "kenote-mount": "^1.0.1"
   },
   "bin": {
-    "node-nginx": "./bin/index.js"
+    "node-react": "./bin/index.js"
   },
   "engines": {
     "node": ">=6.9.0",
