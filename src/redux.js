@@ -7,7 +7,8 @@ const base = require('./base')
 
 const { 
   rootQuest,
-  nameQuest
+  nameQuest,
+  listQuest,
 } = mounts(path.resolve(__dirname, './questions'), 'quest')
 
 exports.add = () => {
@@ -34,13 +35,25 @@ exports.remove = () => {
   return inquirer.prompt(rootQuest('./src/redux'))
     .then( answers => {
       options = answers
-      return inquirer.prompt(nameQuest(options.root, true))
+      let lists = getReduxs(options.root)
+      if (lists.length === 0) {
+        console.log(`\n    not reduxs!\n`)
+        return { exit: true }
+      }
+      else {
+        return inquirer.prompt(listQuest('name', 'What redux do you need remove?', lists))
+      }
     })
     .then( answers => {
-      options = Object.assign(options, answers)
-      removeRootIndex(options.name, options.root)
-      removeRedux(`${options.root}/${options.name}`)
-      console.log(`\n    redux remove ${options.name} sccuess!\n`)
+      if (answers.exit) {
+
+      }
+      else {
+        options = Object.assign(options, answers)
+        removeRootIndex(options.name, options.root)
+        removeRedux(`${options.root}/${options.name}`)
+        console.log(`\n    redux remove ${options.name} sccuess!\n`)
+      }
     })
 }
 
@@ -160,4 +173,19 @@ const getReducers = (arr) => {
   + `${reducers}`
   + `}`
   return data
+}
+
+const getReduxs = (root) => {
+  let dir = path.resolve(base.__BASEDIR, root)
+  let arr = []
+  if (!fs.existsSync(dir)) return arr
+  let reduxs = fs.readdirSync(dir)
+  for (let e of reduxs) {
+    try {
+      !fs.ensureDirSync(path.resolve(base.__BASEDIR, root, e)) && arr.push(_.upperFirst(_.camelCase(e)))
+    } catch (error) {
+      
+    }
+  }
+  return arr
 }
