@@ -1,0 +1,23 @@
+{
+  "name": "kenote-react-cli",
+  "version": "1.0.0",
+  "description": "cli for react",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "https://github.com/thondery/kenote-react-cli.git",
+  "author": "thondery <thondery@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "fs-extra": "^4.0.2",
+    "inquirer": "^3.3.0",
+    "kenote-mount": "^1.0.1"
+  },
+  "bin": {
+    "node-nginx": "./bin/index.js"
+  },
+  "engines": {
+    "node": ">=6.9.0",
+    "npm": ">=3.0.0"
+  }
+}
