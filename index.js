@@ -2,7 +2,7 @@ const program = require('commander')
 const _ = require('lodash')
 const pkg = require('./package.json')
 const version = pkg.version
-const { redux, component } = require('./src')
+const { redux, component, feature } = require('./src')
 
 program
   .version(version)
@@ -46,6 +46,25 @@ program
       var opts = _.last(program.args).options
       var desc = _.last(program.args)._description
       help('component [options]', desc, opts)
+    }
+  })
+  
+program
+  .command('feature')
+  .option('-a, --add ', 'add feature ...')
+  .option('-r, --remove ', 'remove feature ...')
+  .description('feature toolkit ...')
+  .action( () => {
+    if (program.args[0].add) {
+      feature.add()
+    }
+    else if (program.args[0].remove) {
+      feature.remove()
+    }
+    else {
+      var opts = _.last(program.args).options
+      var desc = _.last(program.args)._description
+      help('feature [options]', desc, opts)
     }
   })
 
