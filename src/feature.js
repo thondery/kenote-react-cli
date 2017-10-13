@@ -125,7 +125,7 @@ const createIndex = (opts) => {
       + `  path: '${opts.route}',\n`
       + `  name: '${opts.showName}',\n`
       + `  childRoutes: [,\n`
-      + `    { path: 'default', name: '${opts.showName}', component: Screen },\n`
+      + `    { path: 'default', name: '${opts.showName}', component: Screen, isIndex: true },\n`
       + `  ],\n`
       + `}\n`
       + `\n`
