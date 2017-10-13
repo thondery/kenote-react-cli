@@ -38,6 +38,7 @@ jspm_packages/
 src/redux/
 src/components/
 src/features/
+src/config/
 
 # Typescript v1 declaration files
 typings/

@@ -1,6 +1,6 @@
 {
   "name": "kenote-react-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "cli for react",
   "main": "index.js",
   "preferGlobal": true,

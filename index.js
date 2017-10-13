@@ -2,7 +2,7 @@ const program = require('commander')
 const _ = require('lodash')
 const pkg = require('./package.json')
 const version = pkg.version
-const { redux, component, feature } = require('./src')
+const { redux, component, feature, config } = require('./src')
 
 program
   .version(version)
@@ -66,6 +66,14 @@ program
       var desc = _.last(program.args)._description
       help('feature [options]', desc, opts)
     }
+  })
+  
+program
+  .command('config')
+  .description('set config')
+  .action( () => {
+    console.log('config')
+    config.set()
   })
 
 
