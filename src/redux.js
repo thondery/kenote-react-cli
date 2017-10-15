@@ -52,7 +52,7 @@ exports.remove = () => {
         options = Object.assign(options, answers)
         let name = _.kebabCase(options.name)
         removeRootIndex(name, options.root)
-        removeRedux(`${options.root}/${options.name}`)
+        removeRedux(`${options.root}/${name}`)
         console.log(`\n    redux remove ${options.name} sccuess!\n`)
       }
     })
@@ -106,7 +106,7 @@ const createRootIndex = (name, dir) => {
       if (/^export\s+\{\s+actions/.test(e)) {
         actionArr.push(e)
       }
-      if (/^import\s+\{\s+Reducer/.test(e)) {
+      if (/^export\s+\{\s+Reducer/.test(e)) {
         reducerArr.push(e)
       }
     }
@@ -135,7 +135,6 @@ const removeRootIndex = (name, dir) => {
     let reducerArr = []
     for (let e of info.split(/\n/)) {
       if (/^export\s+\{\s+actions/.test(e)) {
-        console.log(e.match(/\.\/(\S*)\'/)[1], name)
         e.match(/\.\/(\S*)\'/)[1] !== name && actionArr.push(e)
       }
       if (/^export\s+\{\s+Reducer/.test(e)) {
