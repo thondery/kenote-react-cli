@@ -2,7 +2,7 @@ const program = require('commander')
 const _ = require('lodash')
 const pkg = require('./package.json')
 const version = pkg.version
-const { redux, component, feature, config } = require('./src')
+const { redux, component, feature, config, scaffold } = require('./src')
 
 program
   .version(version)
@@ -72,8 +72,26 @@ program
   .command('config')
   .description('set config')
   .action( () => {
-    console.log('config')
     config.set()
+  })
+  
+program
+  .command('scaffold')
+  .option('-u, --update', 'update scaffold ...')
+  .option('-i, --install', 'install scaffold ...')
+  .description('scaffold toolkit ...')
+  .action( () => {
+    if (program.args[0].update) {
+      scaffold.update()
+    }
+    else if (program.args[0].install) {
+      scaffold.install()
+    }
+    else {
+      var opts = _.last(program.args).options
+      var desc = _.last(program.args)._description
+      help('scaffold [options]', desc, opts)
+    }
   })
 
 

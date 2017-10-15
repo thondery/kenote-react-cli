@@ -146,7 +146,7 @@ const removeRootIndex = (name, dir, type) => {
   let fileDir = path.resolve(base.__BASEDIR, dir, 'index.js')
   if (!fs.existsSync(fileDir)) return
   let info = fs.readFileSync(fileDir, { encoding: 'utf-8' })
-  let data = /Routes/.test(info)
+  let data = /default/.test(info)
     ? getRootIndex(name, fileDir, true)
     : getRootIndexNative(name, fileDir, true)
   fs.writeFileSync(fileDir, data, { encoding: 'utf-8' })
@@ -180,30 +180,22 @@ const getRootIndex = (name, dir, remove = false) => {
   if (fs.existsSync(dir)) {
     let info = fs.readFileSync(dir, { encoding: 'utf-8' })
     let screenArr = []
-    let nameArr = []
     for (let e of info.split(/\n/)) {
-      if (/^import\s+/.test(e)) {
+      if (/^export\s+/.test(e)) {
         if (e.match(/\.\/(\S*)\'/)[1] !== name || !remove) {
           screenArr.push(e)
-          nameArr.push(e.match(/\.\/(\S*)\'/)[1])
         }
       }
     }
-    !remove && screenArr.push(`import ${_.upperFirst(_.camelCase(name))} from './${name}'`)
-    !remove && nameArr.push(name)
+    !remove && screenArr.push(`export { default as ${_.upperFirst(_.camelCase(name))} } from './${name}'`)
     let arr = _.uniq(screenArr)
     for (let e of arr) {
       data += `${e}\n`
     }
-    data += `${getRoutes(nameArr)}`
   }
   else {
     data = ``
-      + `import ${_.upperFirst(_.camelCase(name))} from './${name}'\n`
-      + `\n`
-      + `export const Routes = [\n`
-      + `  ${_.upperFirst(_.camelCase(name))},\n`
-      + `]`
+      + `export { default as ${_.upperFirst(_.camelCase(name))} } from './${name}'\n`
   }
   return data
 }

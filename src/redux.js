@@ -50,7 +50,8 @@ exports.remove = () => {
       }
       else {
         options = Object.assign(options, answers)
-        removeRootIndex(options.name, options.root)
+        let name = _.kebabCase(options.name)
+        removeRootIndex(name, options.root)
         removeRedux(`${options.root}/${options.name}`)
         console.log(`\n    redux remove ${options.name} sccuess!\n`)
       }
@@ -101,33 +102,25 @@ const createRootIndex = (name, dir) => {
     let info = fs.readFileSync(fileDir, { encoding: 'utf-8' })
     let actionArr = []
     let reducerArr = []
-    let nameArr = []
     for (let e of info.split(/\n/)) {
       if (/^export\s+\{\s+actions/.test(e)) {
         actionArr.push(e)
       }
       if (/^import\s+\{\s+Reducer/.test(e)) {
         reducerArr.push(e)
-        nameArr.push(e.match(/\.\/(\S*)\'/)[1])
       }
     }
     actionArr.push(`export { actions as ${_.camelCase(`${name}Actions`)} } from './${name}'`)
-    reducerArr.push(`import { Reducer as ${_.camelCase(`${name}Reducer`)} } from './${name}'`)
-    nameArr.push(name)
+    reducerArr.push(`export { Reducer as ${_.camelCase(`${name}Reducer`)} } from './${name}'`)
     let arr = _.uniq(_.concat(actionArr, reducerArr))
     for (let e of arr) {
       data += `${e}\n`
     }
-    data += `${getReducers(nameArr)}`
   }
   else {
     data = ``
       + `export { actions as ${_.camelCase(`${name}Actions`)} } from './${name}'\n`
-      + `import { Reducer as ${_.camelCase(`${name}Reducer`)} } from './${name}'\n`
-      + `\n`
-      + `export const Reducers = {\n`
-      + `  ${_.upperFirst(name)}: ${_.camelCase(`${name}Reducer`)}\n`
-      + `}`
+      + `export { Reducer as ${_.camelCase(`${name}Reducer`)} } from './${name}'\n`
     
   }
   fs.writeFileSync(fileDir, data, { encoding: 'utf-8' })
@@ -140,39 +133,25 @@ const removeRootIndex = (name, dir) => {
     let info = fs.readFileSync(fileDir, { encoding: 'utf-8' })
     let actionArr = []
     let reducerArr = []
-    let nameArr = []
     for (let e of info.split(/\n/)) {
       if (/^export\s+\{\s+actions/.test(e)) {
+        console.log(e.match(/\.\/(\S*)\'/)[1], name)
         e.match(/\.\/(\S*)\'/)[1] !== name && actionArr.push(e)
       }
-      if (/^import\s+\{\s+Reducer/.test(e)) {
+      if (/^export\s+\{\s+Reducer/.test(e)) {
         e.match(/\.\/(\S*)\'/)[1] !== name && reducerArr.push(e)
-        e.match(/\.\/(\S*)\'/)[1] !== name && nameArr.push(e.match(/\.\/(\S*)\'/)[1])
       }
     }
     let arr = _.uniq(_.concat(actionArr, reducerArr))
     for (let e of arr) {
       data += `${e}\n`
     }
-    data += `${getReducers(nameArr)}`
     fs.writeFileSync(fileDir, data, { encoding: 'utf-8' })
   }
 }
 
 const removeRedux = (dir) => {
   fs.removeSync(path.resolve(base.__BASEDIR, dir))
-}
-
-const getReducers = (arr) => {
-  let reducers = ``
-  for (let e of _.uniq(arr)) {
-    reducers += `  ${_.upperFirst(e)}: ${_.camelCase(`${e}Reducer`)},\n`
-  }
-  let data = `\n`
-  + `export const Reducers = {\n`
-  + `${reducers}`
-  + `}`
-  return data
 }
 
 const getReduxs = (root) => {
