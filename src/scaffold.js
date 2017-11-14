@@ -70,7 +70,7 @@ const downloadScaffold = (opts) => {
   let bash = `rm -rf ${dir}/* && rm -rf ${dir}`
     + ` && git clone${branch} ${repo} ${dir} --separate-git-dir ${scaffoldPath}/.baserc`
     + ` && rm -rf ${scaffoldPath}/.baserc`
-    + ` && rm -rf ${dir}/LICENSE ${dir}/README.md ${dir}/.gitignore`
+    + ` && rm -rf ${dir}/LICENSE ${dir}/README.md ${dir}/.gitignore ${dir}/.git`
   return runscript(bash)
 }
 
